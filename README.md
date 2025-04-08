@@ -49,6 +49,29 @@ Videos folder with either videos symlinks in it or video_length_dict.pkl where i
 
 # Processing AOT
 Coming soon.
+Download the AOT dataset there are three parts, 1st part should suffice for running my experiements. 
+1. Link to understand the AOT dataset: [Challenge](https://www.aicrowd.com/challenges/airborne-object-tracking-challenge#dataset)
+2. [Starter Notebook](https://colab.research.google.com/drive/1B5Gevpg6GIlfMRRfiG79V8Foz13_ncUr#scrollTo=exempt-heath) you need to clone [http://gitlab.aicrowd.com/amazon-prime-air/airborne-detection-starter-kit.git](http://gitlab.aicrowd.com/amazon-prime-air/airborne-detection-starter-kit.git) you can download flight by flight, keep partial=False & download all flights in part1.
+Starter kit is already present in the folder [aotcore](./aotcore/), I renamed core folder in the starter kit as aotcore.
+3. Or you can download all files on this [s3 bucket](https://registry.opendata.aws/airborne-object-tracking/)
+4. Suppose you save entire part1 in `dataset_root = /home/c3-0/datasets/Amazon-AOT/data/part1`
+5. `cp conversion_scripts/aot_to_visdrone.py ./` copy aot_to_visdrone.py outside in main root folder & 
+6. Set variables `dataset_root` & `aot_yolo_root_dir` in the file `aot_to_visdrone.py`. It will create symlinks from locally downloaded files at `dataset_root` to destination folder `aot_yolo_root_dir` this destination folder will be used in training & testing. Test spilts are created to speedup testing parallely, if not required you can consider clustering all test flights in same yaml file by changing the setting in `aot_to_visdrone.py`.
+7. Run `python aot_to_visdrone.py` such that `aot_to_visdrone.py`, `aotcore` & `aot_flight_ids` are all in same directory. If some path issues occur consider exporting aotcore path.
+8. For training create [`AOT.yaml`](./data/AOT.yaml) like shown in `data/AOT.yaml` changing appropriate paths
+9. To run training refer to comments in [submit-train.slurm](./submit-train.slurm) `python train.py --img 1280 --adam --batch 4 --epochs 80 --data ./data/AOT.yaml --weights ./pretrained/yolo5l.pt \
+--hy ./data/hyps/hyp.VisDrone_1.yaml --cfg ./models/yolov5l-xl.yaml --project ./runs/train/AOT \
+--name image_size_1280_YOLOXL_1_frames_SwinTR_AOT_with_yolo_weights --exist-ok`
+10. Above command will run training for 1 frame model, to run for 3 frames change `--hy ./data/hyps/hyp.Visdrone_3.yaml` for 5 frames change it to `--hy ./data/hyps/hyp.Visdrone.yaml`, also note that above training requires 2 GPUs with 49 GB VRAM capacity
+11. For testing refer to comments in [sumbit-test.slurm](./submit-test.slurm) `python val.py --data ./data/AOTTestSplits/AOTTest_$SLURM_ARRAY_TASK_ID.yaml \
+ --weights ./runs/train/AOT/image_size_1280_temporal_SwinTR_1_frames_AOT_with_yolo_weights/weights/best.pt \
+ --batch-size 5 --img 1280 --num-frames 1 \
+ --project ./runs/val/AOT/image_size_1280_temporal_SwinTR_1_frames_AOT_with_yolo_weights --name best \
+ --task test --exist-ok --save-aot-predictions --save-json-gt` this should be launched on 8 == No.of AOT test splits we created gpus simultaneously, each gpu should be of capacity 24 GB VRAM, test if it can work with smaller VRAM as well, reduce batch_size maybe.
+ 12. Finally run `python evaluate_aot.py --results_folder ./runs/val/AOTtest/epoch_17/aotpredictions --evaluation_folder /some/destination/folder --detection_threshold 0.2` to get AOT challenge metrics evaluated. This needs the path to the folder where your AOT predictions are stored, in step 11.   
+
+
+
 
 # Training NPS, FL-drones & AOT
 Please follow whatever parameters are set in submit-train.slurm & submit-test.slurm. In training ``` ampere in SBATCH``` refers to 42 gb NVIDIA ampere gpu.
