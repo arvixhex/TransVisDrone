@@ -5,7 +5,7 @@ from pathlib import Path
 from tqdm import tqdm 
 from aotcore.dataset import Dataset as AOTDataset      
 
-dataset_path = "/home/c3-0/datasets/Amazon-AOT/data/part1"
+dataset_path = "/home/project/Drone/tvd2/new2/TransVisDrone/datasets/AOT/part1"
 
 clip_id_to_flight_id_path = "./aot_flight_ids/aot_clip_id_to_flight_id.pkl"
 assert os.path.exists(clip_id_to_flight_id_path)
@@ -77,7 +77,7 @@ def evaluate(result_parts_root_folder="./runs/val/exp", min_score=0.5, evaluatio
     os.makedirs(evaluation_folder_name, exist_ok=True)
     evaluation_parser = argparse.ArgumentParser(description='Evaluate airborne detection results with airborne metrics')
     add_flags(evaluation_parser)
-    args_eval = evaluation_parser.parse_args()
+    args_eval = evaluation_parser.parse_args([])
     args_eval.dataset_folder = f"{evaluation_folder_name}/gt"
     args_eval.results_folder = f"{evaluation_folder_name}/result"
     args_eval.summaries_folder = f"{evaluation_folder_name}/summaries"

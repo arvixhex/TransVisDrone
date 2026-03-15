@@ -3,3 +3,9 @@ Videos/
 *.jpg
 *.png
 */__pycache__/*
+*/runs/*
+datasets/
+runs/*
+__pycache__
+pretrained/
+.vscode

@@ -143,7 +143,7 @@ def train(hyp,  # path/to/hyp.yaml or hyp dictionary
     if pretrained:
         with torch_distributed_zero_first(LOCAL_RANK):
             weights = attempt_download(weights)  # download if not found locally
-        ckpt = torch.load(weights, map_location=device)  # load checkpoint
+        ckpt = torch.load(weights, map_location=device, weights_only=False)  # load checkpoint
         
         model = Model(cfg or ckpt['model'].yaml, ch=3, nc=nc, anchors=hyp.get('anchors'), num_frames=hyp.get('num_frames')).to(device)  # create
         #LOGGER.info(f"exclude would be {(cfg or hyp.get('anchors')) and not resume}")
@@ -378,7 +378,7 @@ def train(hyp,  # path/to/hyp.yaml or hyp dictionary
                     imgs = nn.functional.interpolate(imgs, size=ns, mode='bilinear', align_corners=False)
 
             # Forward
-            with amp.autocast(enabled=cuda):
+            with torch.amp.autocast(device_type='cuda', enabled=cuda):
                 pred = model(imgs)  # forward
                 #targets = [target.to(device) for target in targets]
                 loss, loss_items = compute_loss(pred, targets.to(device))  # loss scaled by batch_size

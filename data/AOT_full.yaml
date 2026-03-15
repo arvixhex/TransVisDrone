@@ -1,0 +1,18 @@
+# Train/val/test sets as 1) dir: path/to/imgs, 2) file: path/to/imgs.txt, or 3) list: [path/to/imgs1, path/to/imgs2, ..]
+path: ./datasets/AOT/part1/yoloStyle      #best  to provide full path like this ->>home/tu666280/aot_part_1_yolo_data  # dataset root dir
+train: train/frames  # train images (relative to 'path')  6471 images
+val: val/full/frames  # val images (relative to 'path')  548 images
+test: test/full/frames  # test images (optional)  1610 images
+annotation_path: ./datasets/AOT/part1/yoloStyle     #/home/tu666280/aot_part_1_yolo_data
+annotation_train: train/labels
+annotation_val: val/full/labels
+annotation_test: test/full/labels
+video_root_path: ./datasets/AOT/part1/yoloStyle  # provide full path if any problem occur  like this ->>/home/tu666280/aot_part_1_yolo_data
+video_root_path_train: train/videos
+video_root_path_val: val/full/videos
+video_root_path_test: test/full/videos
+
+# Classes
+nc: 2  # number of classes
+names: ['drone', 'airborne']
+

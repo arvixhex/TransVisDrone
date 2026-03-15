@@ -434,8 +434,8 @@ def augment_with_moving_most_common_track_id_count_per_encounter(df_matches, tem
     df_matched_track_freq = pd.DataFrame(columns=['encounter_id', 'track_fl_dr'])
     for encounter_name, group in df_same_track_id_count: 
         df_res = my_rolling_apply_char(group['matched_track_id'], temporal_window, get_most_common_freq)
-        df_res = df_res.assign(encounter_id = encounter_name)
-        df_matched_track_freq = df_matched_track_freq.append(df_res)
+        df_res = df_res.assign(encounter_id = [str(encounter_name)] * len(df_res))
+        df_matched_track_freq = pd.concat([df_matched_track_freq, df_res], ignore_index=True)
     df_matched_track_freq.index.name = 'frame'
     return df_matched_track_freq.reset_index()
 
@@ -518,6 +518,8 @@ def compute_moving_frame_level_detection_rate_per_encounter(df_matches, df_val_e
                                         df_encounters_with_frame_matches, fl_dr_temporal_win)
     
     log.info('Merge frame_level detection rate ')
+    df['encounter_id'] = df['encounter_id'].astype(str)
+    df_with_moving_fl_dr['encounter_id'] = df_with_moving_fl_dr['encounter_id'].astype(str)
     df = df.merge(df_with_moving_fl_dr, on=['encounter_id','frame'], how='left')    
 
     if use_track_fl_dr:
@@ -533,7 +535,11 @@ def compute_moving_frame_level_detection_rate_per_encounter(df_matches, df_val_e
             ['encounter_id','frame'])['matched_track_id'].agg(lambda x: flatten(list(x))).reset_index(0)
         df_with_track_id_count = augment_with_moving_most_common_track_id_count_per_encounter(
                                             df_encounters_with_matched_track_ids, fl_dr_temporal_win)
+        df2['encounter_id'] = df2['encounter_id'].astype(str)
+        df_with_track_id_count['encounter_id'] = df_with_track_id_count['encounter_id'].astype(str)
         df2 = df2.merge(df_with_track_id_count, on=['encounter_id','frame'], how='left')
+        df2['encounter_id'] = df2['encounter_id'].astype(str)
+        df['encounter_id'] = df['encounter_id'].astype(str)
         df = df.merge(df2[['encounter_id','frame', 'matched_track_id', 'track_fl_dr']], 
                                             on=['encounter_id','frame'], how='left')
     # asserting correctness of detection rate calculation based on track_id compared to regular fl_dr

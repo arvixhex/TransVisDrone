@@ -15,10 +15,17 @@ from functools import reduce, lru_cache
 from operator import mul
 from einops import rearrange
 
+import torch.nn as nn
+_orig_gelu = nn.GELU.forward
+def _gelu_forward(self, x):
+    if not hasattr(self, 'approximate'):
+        self.approximate = 'none'
+    return _orig_gelu(self, x)
+nn.GELU.forward = _gelu_forward
+
 import logging
 from mmcv.utils import get_logger
 from mmcv.runner import load_checkpoint
-
 
 
 def get_root_logger(log_file=None, log_level=logging.INFO):

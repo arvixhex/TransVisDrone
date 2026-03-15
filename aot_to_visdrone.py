@@ -5,7 +5,7 @@ from glob import glob
 from tqdm.auto import tqdm
 from p_tqdm import p_umap, p_map
 
-dataset_root = "./datasets/AOT/part1"   #home/c3-0/datasets/Amazon-AOT/data/part1
+dataset_root = "/home/project/Drone/tvd2/new2/TransVisDrone/datasets/AOT/part1"   #home/c3-0/datasets/Amazon-AOT/data/part1
 dataset = AOTDataset(local_path=dataset_root, 
                     s3_path='s3://airborne-obj-detection-challenge-training/part1/', 
                     download_if_required=False, 
@@ -68,7 +68,7 @@ def extract_flight_labels(arg):
     return False, ""
 def create_yolo_dataset_from_aot():
     aot_flight_id_paths = "./aot_flight_ids"
-    aot_yolo_root_dir = "./datasets/AOT/part1/yoloStyle"
+    aot_yolo_root_dir = "/home/project/Drone/tvd2/new2/TransVisDrone/datasets/AOT/part1/yoloStyle"
     os.makedirs(aot_yolo_root_dir, exist_ok=True)
    
     train_ids = json.load(open(osp.join(aot_flight_id_paths, "trainflightidsfull1.json"), "r" ))
@@ -159,7 +159,7 @@ def extract_video_length(arg):
     return clip_id, frames_len
 
 def create_video_length_dict():
-    aot_yolo_root_dir = "./datasets/AOT/part1/yoloStyle"
+    aot_yolo_root_dir = "/home/project/Drone/tvd2/new2/TransVisDrone/datasets/AOT/part1/yoloStyle"
     aot_flight_id_paths = "./aot_flight_ids"
     train_ids = json.load(open(osp.join(aot_flight_id_paths, "trainflightidsfull1.json"), "r" ))
     val_ids = json.load(open(osp.join(aot_flight_id_paths, "valflightidsfull1.json"), "r" ))
@@ -237,7 +237,7 @@ def generate_split(arg):
         print(f"exception {e}, args {arg}")
     return clip_id_to_length_dict
 def create_test_splits(size_of_each_split=10):
-    aot_yolo_root_dir = "./datasets/AOT/part1/yoloStyle"
+    aot_yolo_root_dir = "/home/project/Drone/tvd2/new2/TransVisDrone/datasets/AOT/part1/yoloStyle"
     #frames_root = osp.join(aot_yolo_root_dir, "test/full/frames")
     labels_root = osp.join(aot_yolo_root_dir, "test/full/labels")
     aot_flight_id_paths = "./aot_flight_ids"
@@ -261,15 +261,15 @@ def create_test_splits(size_of_each_split=10):
         clip_id_to_length_dict = generate_split((flight_ids, clip_ids, labels_root, dest_frame_root, dest_labels_root))
         pickle.dump(clip_id_to_length_dict, open(osp.join(dest_videos_root, "video_length_dict.pkl"), "wb"))
         yaml_dict = {
-                    "path":"./datasets/AOT/part1/yoloStyle", 
+                    "path":"/home/project/Drone/tvd2/new2/TransVisDrone/datasets/AOT/part1/yoloStyle", 
                     "train": "train/frames", 
                     "val": "val/full/frames",
                     "test": f"test/part{split_id}/frames",
-                    "annotation_path": "./datasets/AOT/part1/yoloStyle",
+                    "annotation_path": "/home/project/Drone/tvd2/new2/TransVisDrone/datasets/AOT/part1/yoloStyle",
                     "annotation_train": "train/labels",
                     "annotation_val": "val/full/labels",
                     "annotation_test": f"test/part{split_id}/labels",
-                    "video_root_path": "./datasets/AOT/part1/yoloStyle",
+                    "video_root_path": "/home/project/Drone/tvd2/new2/TransVisDrone/datasets/AOT/part1/yoloStyle",
                     "video_root_path_train": "train/videos",
                     "video_root_path_val": "val/full/videos",
                     "video_root_path_test": f"test/part{split_id}/videos",

@@ -1,0 +1,6 @@
+name: tt
+channels:
+  - defaults
+dependencies:
+  - python=3.10
+prefix: /home/agniva/anaconda3/envs/tt

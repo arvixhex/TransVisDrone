@@ -1,0 +1,21 @@
+first create the enviroment ->> conda create -n transvis python=3.10
+activate env ->> conda activate transvis
+first degrade the setuptools due to pkg_resources not in 82 version ->> pip install "setuptools<82"
+download requirements ->> pip install -r requirements
+for mmcv special pip install -r requirements.txt --no-build-isolation
+
+
+For NPS
+	1. first download annotations ->> python download_nps_annotations.py 
+	2. download video , extract only video not frames that is done by seprate file , arrange them in train ,val , train, in dataset/NPS/AllFrames
+	3. download pretrained weights at pretrained/ ->> python download_pretrained_weights.py 
+	4. extract nps video frames ->> python extract_nps_frames.py ->> you can also add --split for specific frames split like ->> python extract_nps_frames.py --split val
+	5. Now run nps_to_visdrone.py for visdrone style annotations. first go to conversion_scripts by cd conversion_scripts  ->> python nps_to_visdrone.py
+	6. then run VisDrone_original_2YOLO_lable.py for yolo style labels ->> python VisDrone_original_2YOLO_lable.py ->>IMP you must present in where this script is present [cd conversion_scripts]
+	7. now see the commands in the notes.txt
+
+For AOT 
+    1. first we download the groundtruth or annotations for aot (run the download_aot_annotations from project directory where the file itself is present because the relative path for output is set according to that)  ->> python download_aot_annotations.py
+	2. then we download the frames for that just run the download_aot_frames.py as same as above instructions apply (you get enough options to to select required frames which you want to download after running this file) ->> python download_aot_frames.py
+	3. run aot_to_visdrone.py must be in project directory not from conversion_scripts ->> python aot_to_visdrone.py 
+	4. now for command go to notes.txt

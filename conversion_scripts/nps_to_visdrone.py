@@ -13,10 +13,10 @@ for split in splits:
         valid_clips = range(41,51)
 
 
-    anno_files = glob.glob('/home/c3-0/tu666280/NPS/annotations/NPS-Drones-Dataset/*') #Clip_001.txt
-    frame_directory = '/home/c3-0/tu666280/NPS-Data-Uncompressed/AllFrames/' + split #Clip_1_000000.png
-    output_image_folder = 'NPSvisdroneStyle/' + split + '/images'
-    output_annos_folder = 'NPSvisdroneStyle/' + split + '/annotations'
+    anno_files = glob.glob('/home/project/Drone/tvd2/new2/TransVisDrone/datasets/NPS/annotations/*') #Clip_001.txt
+    frame_directory = '/home/project/Drone/tvd2/new2/TransVisDrone/datasets/NPS/AllFrames/' + split #Clip_1_000000.png
+    output_image_folder = '/home/project/Drone/tvd2/new2/TransVisDrone/datasets/NPS/NPSvisdroneStyle/' + split + '/images'
+    output_annos_folder = '/home/project/Drone/tvd2/new2/TransVisDrone/datasets/NPS/NPSvisdroneStyle/' + split + '/annotations'
 
     if not os.path.exists(output_image_folder):
         os.makedirs(output_image_folder)

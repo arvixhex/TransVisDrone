@@ -1,0 +1,86 @@
+
+copy paste this in terminal before start of training for good working ->> export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True  
+
+FOR NPS:
+{
+for test
+
+go to where val.py is present
+
+python val.py \
+  --data ./data/NPS.yaml \
+  --weights ./pretrained/TransVisDrone_weights/runs/train/NPS/image_size_1280_temporal_YOLO5l_5_frames_NPS_end_to_end_skip_0/weights/best.pt \
+  --batch-size 4 \
+  --img 1280 \
+  --task test \
+  --device 0 \
+  --project ./runs/test/NPS \
+  --name nps_test
+
+for val
+
+python val.py \
+  --data ./data/NPS.yaml \
+  --weights ./pretrained/TransVisDrone_weights/runs/train/NPS/image_size_1280_temporal_YOLO5l_5_frames_NPS_end_to_end_skip_0/weights/best.pt \
+  --batch-size 4 \
+  --img 1280 \
+  --task val \
+  --device 0 \
+  --project ./runs/val/NPS \
+  --name nps_val
+
+
+for train 
+
+python train.py \
+  --img 1280 \
+  --adam \
+  --batch 4 \
+  --epochs 80 \
+  --data ./data/NPS.yaml \
+  --weights ./pretrained/yolov5l.pt \
+  --hy ./data/hyps/hyp.VisDrone.yaml \
+  --cfg ./models/yolov5l.yaml \
+  --project ./runs/train/NPS \
+  --name nps_training
+
+}
+
+FOR AOT:
+{
+for val
+
+python val.py \
+  --data ./data/AOT_full.yaml \
+  --weights ./pretrained/TransVisDrone_weights/runs/train/AOT/image_size_1280_YOLOXL_3_frames_AOT_with_yolo_weights_end_to_end/weights/best.pt \
+  --batch-size 2 \
+  --img 1280 \
+  --num-frames 3 \
+  --project ./runs/val/AOT \
+  --name aot_val \
+  --task val \
+  --device 0 \
+  --save-aot-predictions
+
+for test 
+
+python val.py \
+  --data ./data/AOT_full.yaml \
+  --weights ./pretrained/TransVisDrone_weights/runs/train/AOT/image_size_1280_YOLOXL_3_frames_AOT_with_yolo_weights_end_to_end/weights/best.pt \
+  --batch-size 2 \
+  --img 1280 \
+  --num-frames 3 \
+  --project ./runs/val/AOT \
+  --name aot_test \
+  --task test \
+  --device 0 \
+  --save-aot-predictions
+
+
+for train
+
+add later 
+
+
+now for evaluate_aot.py ->> python evaluate_aot.py -r ./runs/val/AOT/aot_val/aotpredictions -e ./runs/val/AOT/aot_val/metrics -t 0.25
+}
